@@ -1,0 +1,54 @@
+dịch chuyển từng hàng theo quy tắc: 
+fillNextRow(const int previousRow, const int nextRow, const int shifts)
+{
+	for (int col = 0; col < (9 - shifts); col++)
+	{
+		setElement(nextRow, col, getElement(previousRow, col + shifts));
+	}
+
+	for (int col = (9 - shifts); col < 9; col++)
+	{
+		setElement(nextRow, col, getElement(previousRow, col - 9 + shifts));
+	}
+}
+
+--> cách dùng hàm fillNextRow: Tham số previousRow là hàng trước đó đã được điền giá trị, nextRow là hàng tiếp theo cần được điền giá trị, và shifts là số lượng ô cần di chuyển để tạo ra hàng tiếp theo. Hàm sử dụng vòng lặp để duyệt qua từng ô trong hàng tiếp theo, và điền giá trị tương ứng bằng cách lấy giá trị từ cột tương ứng trong hàng trước đó và di chuyển nó sang phải bằng shifts ô. Nếu giá trị được điền vào vượt quá giới hạn của lưới (9 ô) thì hàm sẽ quay lại và điền giá trị vào từ đầu của lưới.
+
+
+
+ví dụ: 
+Hàng 0: 1 2 3 4 5 6 7 8 9
+
+Sau fillNextRow(0, 1, 3), hàng 1 sẽ trở thành: 
+1 2 3 4 5 6 7 8 9 -> 4 5 6 1 2 3 7 8 9
+
+Sau fillNextRow(1, 2, 3), hàng 2 sẽ trở thành: 
+4 5 6 1 2 3 7 8 9 -> 1 2 3 7 8 9 4 5 6
+
+
+QUY TẮC:*****
+0,0,0
+0,1,3
+1,2,3
+2,3,1
+3,4,3
+4,5,3
+5,6,1
+6,7,3
+7,8,3
+
+
+
+(Game sẽ đảo ngẫu nhiên các số ở hàng 0 này)
+1	2	3 |	4	5	6 |	7	8	9 | hàng 0
+4	5	6 |	7	8	9 |	1	2	3 | --> 0,1,3	
+7	8	9 |	1	2	3 |	4	5	6 | --> 1,2,3
+-------------------------------------------------
+8	9	1 |	2	3	4 |	5	6	7 | --> 2,3,1
+2	3	4 |	5	6	7 |	8	9	1 | --> 3,4,3
+5	6	7 |	8	9	1 |	2	3	4 | --> 4,5,3
+-------------------------------------------------
+6	7	8 |	9	1	2 |	3	4	5 | --> 5,6,1
+9	1	2 |	3	4	5 |	6	7	8 | --> 6,7,3
+3	4	5 |	6	7	8 |	9	1	2 | --> 7,8,3
+

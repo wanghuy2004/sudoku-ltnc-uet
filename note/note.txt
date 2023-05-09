@@ -1,0 +1,5 @@
+ở ver1.cpp thì trong phần while(!stop) sử dụng hàm localtime_s để định dạng thời gian với giờ địa phương, điều này khiến cho bộ đếm thời gian khi người chơi bắt đầu game bị lỗi và bắt đầu lúc 07:00:00
+
+-------------------------------------------
+đã fix ở Sudoku.cpp trong phần while(!stop) sử dụng hàm gmtime để định dạng thời gian với giờ GMT (Greenwich Mean Time), sử dụng hàm gmtime() để chuyển đổi thời gian tính bằng giây sang cấu trúc tm theo giờ địa phương.
+sau khi sửa xong thì bộ đếm thời gian đã chạy 00:00:00

@@ -1,0 +1,2 @@
+all:
+	g++ -I scr/include -L scr/lib -o game data/main.cpp data/Button.cpp data/Sudoku.cpp data/SudokuCell.cpp data/SudokuGenerator.cpp data/SudokuSolver.cpp   -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer

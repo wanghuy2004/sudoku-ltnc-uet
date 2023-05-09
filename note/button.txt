@@ -1,0 +1,75 @@
+*Button::Button()
+--> Constructor này được gọi khi một đối tượng Button được tạo ra. Trong constructor này, các giá trị ban đầu của Button được thiết lập, bao gồm:
+mCurrentState: trạng thái ban đầu của nút, được đặt thành BUTTON_MOUSE_OUT (nút chuột ngoài).
+mTexture: con trỏ đến texture của nút, được đặt thành giá trị nullptr.
+mButtonRect: hình chữ nhật đại diện cho vị trí và kích thước của nút, được đặt thành {0, 0, 0, 0} (tức là kích thước và vị trí của nút ban đầu sẽ là 0).
+mTextureRect: hình chữ nhật đại diện cho kích thước và vị trí của texture của nút, được đặt thành {0, 0, 0, 0} (tức là kích thước và vị trí của texture ban đầu sẽ là 0).
+mMouseOutColour: màu sắc của nút khi chuột không di chuyển trên nó, được đặt thành {255, 255, 255, SDL_ALPHA_OPAQUE} (màu lavender).
+mMouseOverMotionColour: màu sắc của nút khi chuột di chuyển qua trên nó, được đặt thành {95, 89, 191, SDL_ALPHA_OPAQUE} (màu xanh lam).
+mMouseDownColour: màu sắc của nút khi chuột được nhấn xuống, được đặt thành {91, 191, 116, SDL_ALPHA_OPAQUE} (màu xanh lá cây).
+mMouseUpColour: màu sắc của nút khi chuột được nhả ra, được đặt thành {95, 89, 191, SDL_ALPHA_OPAQUE} (màu xanh lam).
+mSelected: trạng thái của nút được chọn hay không, được đặt mặc địnhthành false (không được chọn).
+
+
+*void Button::setTexture(SDL_Texture* texture)
+--> Hàm setTexture trong lớp Button được sử dụng để đặt hình ảnh cho nút. Hình ảnh được đưa vào hàm này dưới dạng con trỏ tới đối tượng SDL_Texture. Khi được gọi, hàm sẽ thiết lập con trỏ mTexture trong đối tượng Button bằng con trỏ hình ảnh được đưa vào, từ đó hình ảnh sẽ được hiển thị trên nút.
+
+
+*void Button::centerTextureRect()
+--> Hàm centerTextureRect của lớp Button được sử dụng để đặt vị trí cho texture hiển thị trên nút sao cho texture đó nằm chính giữa nút.
+
+Đầu tiên, hàm này lấy kích thước của texture bằng cách sử dụng hàm SDL_QueryTexture. Sau đó, nó tính toán vị trí bắt đầu của texture sao cho nó nằm chính giữa nút bằng cách tìm giá trị trung bình giữa các tọa độ x và y của nút và trừ đi một nửa kích thước của texture. Cuối cùng, hàm tạo ra một SDL_Rect mới để đặt vị trí cho texture bằng cách sử dụng kích thước và vị trí bắt đầu tính toán được trước đó.
+
+Việc đặt vị trí cho texture sao cho nó nằm chính giữa nút làm cho giao diện người dùng trở nên thẩm mỹ và dễ nhìn hơn.
+
+
+*void Button::setSelected(const bool selected)
+--> Phương thức setSelected() được sử dụng để thiết lập trạng thái được chọn của nút. Khi được gọi với tham số true, nút sẽ được đánh dấu là đã được chọn, và khi được gọi với tham số false, nút sẽ bị bỏ đánh dấu.
+
+Điều này có thể hữu ích trong việc theo dõi trạng thái của các nút trong trò chơi hoặc ứng dụng, để thực hiện các hành động khác nhau tùy thuộc vào trạng thái của các nút đó.
+
+
+*bool Button::isMouseInside(const int x, const int y)
+--> Hàm nhận vào tọa độ x và y của chuột, sau đó kiểm tra xem chúng có nằm trong phạm vi của button hay không bằng cách so sánh với tọa độ và kích thước của button.
+
+Nếu tọa độ x nằm bên trái hoặc bên phải của button thì chuột không nằm trong phạm vi của button. Tương tự, nếu tọa độ y nằm trên hoặc dưới button thì chuột cũng không nằm trong phạm vi của button.
+
+Nếu chuột nằm trong phạm vi của button thì hàm trả về true, ngược lại trả về false.
+
+
+*ButtonState Button::getMouseEvent(const SDL_Event* event)
+--> Nếu sự kiện là sự kiện chuột (mouse event), hàm sẽ lấy vị trí chuột và kiểm tra xem nó có nằm bên trong nút hay không bằng cách sử dụng hàm isMouseInside đã được định nghĩa ở trên. Nếu chuột nằm bên ngoài nút, trạng thái của nút được đặt là BUTTON_MOUSE_OUT, nghĩa là chuột đã rời khỏi nút.
+
+Nếu chuột nằm bên trong nút, trạng thái của chuột được cập nhật dựa trên loại sự kiện chuột. Nếu sự kiện là chuột di chuyển (SDL_MOUSEMOTION), trạng thái của nút được đặt là BUTTON_MOUSE_OVER_MOTION, nghĩa là chuột đang di chuyển trên nút. Nếu sự kiện là chuột bấm xuống (SDL_MOUSEBUTTONDOWN), trạng thái của nút được đặt là BUTTON_MOUSE_DOWN, nghĩa là nút đã được bấm xuống. Nếu sự kiện là chuột nhả ra (SDL_MOUSEBUTTONUP), trạng thái của nút được đặt là BUTTON_MOUSE_UP, nghĩa là nút đã được nhả ra.
+
+Cuối cùng, hàm trả về trạng thái hiện tại của nút.
+
+
+*void Button::setMouseDownColour(const SDL_Color& colour)
+--> Hàm setMouseDownColour được sử dụng để đặt màu cho khi trạng thái của nút chuyển sang BUTTON_MOUSE_DOWN (khi chuột được nhấn xuống trên nút). Tham số đầu vào là một đối tượng SDL_Color đại diện cho màu cần thiết để đặt. Điều này sẽ được sử dụng trong phương thức draw để thay đổi màu của nút tùy thuộc vào trạng thái của nó.
+
+
+*********RENDER Button**********
+*void Button::renderButton(SDL_Renderer* renderer)
+--> Hàm renderButton được sử dụng để vẽ nút lên trên màn hình. Khi được gọi, hàm này sẽ kiểm tra trạng thái hiện tại của nút và thay đổi màu sắc của hình chữ nhật tương ứng để phản ánh trạng thái đó.
+
+Đầu tiên, hàm kiểm tra xem nút có đang được chọn hay không bằng cách kiểm tra giá trị biến mSelected. Nếu nút được chọn, màu sắc của hình chữ nhật sẽ được thay đổi thành màu được định nghĩa trước đó bằng hàm setMouseDownColour.
+
+Nếu nút không được chọn, màu sắc của hình chữ nhật sẽ được thiết lập tương ứng với trạng thái hiện tại của nút bằng câu lệnh switch-case. Các trạng thái được định nghĩa bao gồm:
+
+BUTTON_MOUSE_OUT: chuột không nằm trong nút, màu sắc tương ứng được định nghĩa bằng hàm setMouseOutColour.
+BUTTON_MOUSE_OVER_MOTION: chuột đang di chuyển trên nút, màu sắc tương ứng được định nghĩa bằng hàm setMouseOverMotionColour.
+BUTTON_MOUSE_DOWN: chuột đang nhấn xuống trên nút, màu sắc tương ứng được định nghĩa bằng hàm setMouseDownColour.
+BUTTON_MOUSE_UP: chuột đã nhả ra khỏi nút sau khi nhấn xuống, màu sắc tương ứng được định nghĩa bằng hàm setMouseUpColour.
+Sau khi màu sắc của hình chữ nhật được xác định, hàm sẽ vẽ hình chữ nhật đó lên trên renderer bằng hàm SDL_RenderFillRect. Hình chữ nhật sẽ có kích thước và vị trí đã được định nghĩa trước đó cho nút bấm (biến mButtonRect).
+
+
+*void Button::renderTexture(SDL_Renderer* renderer)
+--> Hàm renderTexture sẽ in ra một texture trên nút bấm. Texture này được lưu trữ trong biến mTexture và được định nghĩa trong hàm khởi tạo Button. Biến mTextureRect chứa kích thước và vị trí của texture trong nút bấm.
+
+Hàm sử dụng hàm SDL_RenderCopy() để in texture lên màn hình. Tham số đầu tiên là renderer, tham số thứ hai là texture, tham số thứ ba là phần của texture mà muốn in ra (ở đây ta in toàn bộ), và tham số thứ tư là vị trí và kích thước của texture trong nút bấm (biến mTextureRect).
+
+Nếu texture không được định nghĩa (tức là mTexture là nullptr), hàm sẽ không thực hiện bất kỳ thao tác nào.
+
+
+

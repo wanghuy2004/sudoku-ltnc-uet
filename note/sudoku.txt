@@ -1,0 +1,172 @@
+********render***********
+**Sudoku::Sudoku::Sudoku()
+--> Hàm khởi tạo của lớp Sudoku. Trong hàm này, các biến thành viên của lớp Sudoku được khởi tạo với các giá trị mặc định. Cụ thể:
+
+mWindowHeight và mWindowWidth lần lượt được khởi tạo là 800 và 720, là kích thước của cửa sổ trò chơi.
+mGridHeight và mGridWidth lần lượt được khởi tạo là 800, là kích thước của lưới trò chơi.
+mGridRows và mGridCols lần lượt được khởi tạo là 9, đại diện cho số hàng và số cột trong lưới trò chơi Sudoku.
+mWindow và mRenderer là các con trỏ đến cửa sổ và renderer của trò chơi, lần lượt được khởi tạo là nullptr, tức là không có gì.
+mTotalTextures được khởi tạo là 14, là tổng số texture của trò chơi Sudoku.
+mTextureCache là một mảng các con trỏ chứa các texture của trò chơi Sudoku, được khởi tạo là nullptr, tức là chưa có texture nào được load.
+mFont là con trỏ đến font chữ của trò chơi Sudoku, được khởi tạo là nullptr, tức là chưa có font chữ nào được load.
+mFontSize được khởi tạo bằng kích thước của một ô trong lưới trò chơi Sudoku, tính bằng cách lấy kích thước của lưới (720) chia cho 9.
+mTotalCells được khởi tạo là 81, là tổng số ô trong lưới trò chơi Sudoku.
+mClearColour là màu sắc của màn hình khi xoá, được khởi tạo là đen với độ trong suốt tối đa (SDL_ALPHA_OPAQUE).
+*****************************
+
+
+**Sudoku::Sudoku::~Sudoku()
+--> hàm hủy của lớp Sudoku, nó được gọi khi đối tượng Sudoku bị hủy hoặc giải phóng. Hàm này sẽ giải phóng bộ nhớ cho các texture của trò chơi bằng cách gọi hàm freeTextures() và đóng game bằng cách gọi hàm close(). Các texture và renderer đã được tạo trong quá trình khởi tạo của đối tượng Sudoku cần được giải phóng để tránh rò rỉ bộ nhớ và tăng hiệu suất cho các ứng dụng khác.
+
+
+**bool Sudoku::Sudoku::initialiseSDL()
+-->Hàm Sudoku::Sudoku::initialiseSDL() được sử dụng để khởi tạo SDL và các thành phần của nó như font chữ, window và RENDER.
+
+Trong hàm này, trước tiên, giá trị khởi tạo succcess được đặt thành true.
+Sau đó, SDL_Init() được sử dụng để khởi tạo SDL video subsystem. Nếu quá trình khởi tạo không thành công, hàm sẽ xuất ra thông báo lỗi và đặt giá trị khởi tạo success thành false.
+Tiếp theo, TTF_Init() được sử dụng để khởi tạo font chữ. Nếu quá trình khởi tạo không thành công, hàm sẽ xuất ra thông báo lỗi và đặt giá trị khởi tạo success thành false.
+Sau đó, SDL_CreateWindow() được sử dụng để tạo cửa sổ với tiêu đề "Game Sudoku", kích thước màn hình là mWindowWidth và mWindowHeight, và chế độ hiển thị là SDL_WINDOW_SHOWN. Nếu quá trình tạo cửa sổ không thành công, hàm sẽ xuất ra thông báo lỗi và đặt giá trị khởi tạo success thành false.
+
+Tiếp theo, SDL_CreateRenderer() được sử dụng để tạo kết xuất với cửa sổ được tạo trước đó và các thông số được đặt mặc định. Nếu quá trình tạo kết xuất không thành công, hàm sẽ xuất ra thông báo lỗi và đặt giá trị khởi tạo success thành false.
+*****
+SDL_CreateRenderer(window,-1,0) với 3 tham số:
+	+ tham số đầu tiên trỏ tới 1 cửa sổ window SDL
+	+ tham số thứ 2là chỉ số driver cần sử dụng cho renderer, -1 ở đây có nghĩa là chọn drive đầu tiên 
+	+ tham số thứ 3 là các flags được sử dụng để đặt thuốc tính của renderer, 0 ở đây nghĩa là không có cờ nào được đặt
+*****
+
+Cuối cùng, TTF_OpenFont() được sử dụng để tải font chữ từ tệp "assets/font.ttf" với kích thước font chữ được đặt là mFontSize. Nếu quá trình tải font chữ không thành công, hàm sẽ xuất ra thông báo lỗi và đặt giá trị khởi tạo success thành false.
+Cuối cùng, hàm trả về giá trị khởi tạo success. Nếu tất cả các quá trình khởi tạo đều thành công, giá trị này sẽ là true. Ngược lại, giá trị này sẽ là false và các thông báo lỗi tương ứng sẽ được xuất ra.
+
+
+**inline int Sudoku::Sudoku::getIndex(int row, int col) const
+--> Hàm getIndex được sử dụng để tính toán chỉ số của một ô trong mảng mCells dựa trên số hàng và số cột của ô đó. Công thức tính chỉ số được sử dụng là row * mGridRows + col.
+
+Công thức tính chỉ số của ô bằng cách sử dụng row * mGridRows + col để tính toán chỉ số của một ô trong mảng 1 chiều mCells tương ứng với hàng row và cột col trong bảng Sudoku.
+
+Ví dụ, nếu ta muốn tính chỉ số của ô ở hàng 3, cột 4 thì ta sẽ sử dụng công thức getIndex(3, 4) = 3 * 9 + 4 = 31. Chỉ số này tương ứng với phần tử thứ 31 trong mảng 1 chiều mCells, và là ô ở hàng 3, cột 4 trong bảng Sudoku.
+
+
+**void Sudoku::Sudoku::loadTexture(SDL_Texture*& texture, const char* text, SDL_Color& fontColour)
+--> Hàm này được sử dụng để tải một đoạn văn bản (text) từ font chữ (được khởi tạo ở hàm initialiseSDL()) và tạo ra một texture trong SDL từ đoạn văn bản đó.
+
+*******
+Đầu tiên, hàm tạo một bề mặt (SDL_Surface) từ đoạn văn bản đó bằng hàm TTF_RenderText_Solid(), với tham số đầu tiên là font chữ, tham số thứ hai là đoạn văn bản, và tham số thứ ba là màu sắc của đoạn văn bản. Nếu việc tạo bề mặt thất bại, hàm in ra thông báo lỗi và không tạo texture nào.
+*******
+
+Nếu việc tạo bề mặt thành công, hàm sử dụng SDL_CreateTextureFromSurface() để tạo texture từ bề mặt đó và lưu trữ vào biến texture. Nếu việc tạo texture thất bại, hàm in ra thông báo lỗi và không lưu trữ texture nào. Sau đó, hàm giải phóng bề mặt bằng SDL_FreeSurface().
+
+
+*void Sudoku::Sudoku::preloadTextures() //tải các texture lên bộ nhớ trước khi hiển thị chúng trên màn hình
+--> Hàm preloadTextures trong lớp Sudoku dùng để tải các texture cần thiết cho game Sudoku lên bộ nhớ trước khi hiển thị chúng trên màn hình.
+
+Trong hàm này, ta định nghĩa một biến fontColour có kiểu là SDL_Color, đại diện cho màu sắc của font. Ta sử dụng màu đen (black) để vẽ chữ trên các texture.
+
+Sau đó, ta sử dụng hàm loadTexture để tải các texture cần thiết lên bộ nhớ. Cụ thể:
+
+Ta tải một texture trống (dùng để vẽ khoảng trắng giữa các số trong bảng Sudoku) bằng cách sử dụng hàm loadTexture(mTextureCache[0], " ", fontColour);. Để vẽ texture này, ta có thể sử dụng cấu trúc dữ liệu của nó để tạo ra một hình chữ nhật có kích thước tương ứng.
+Ta tải các texture cho các số từ 1 đến 9 bằng cách sử dụng vòng lặp for và hàm loadTexture. Trong vòng lặp, ta sử dụng biến num để duyệt qua các số từ 1 đến 9. Để tạo ra chuỗi ký tự tương ứng với số đó, ta sử dụng biểu thức static_cast<char>('0' + num) để chuyển đổi giá trị của biến num từ kiểu int sang kiểu char, sau đó ghép chuỗi này với một ký tự kết thúc chuỗi ('\0') để tạo thành một chuỗi ký tự hoàn chỉnh. Sau đó, ta gọi hàm loadTexture để tải texture lên bộ nhớ, và lưu trữ texture này vào một phần tử của mảng mTextureCache.
+Ta tải các texture cho các nút "Kiểm tra", "Mới", "Sai". "Dung" bằng cách sử dụng hàm loadTexture. Texture này cũng được lưu trữ vào mảng mTextureCache.
+Khi các texture đã được tải lên bộ nhớ, chúng sẽ sẵn sàng để được sử dụng trong game Sudoku.
+
+
+*void Sudoku::Sudoku::createInterfaceLayout()
+--> tạo giao diện cho game
+Đầu tiên, đoạn mã này tạo ra phần đồng hồ để hiển thị thời gian chơi. Nó tính toán kích thước và vị trí của phần đồng hồ bằng cách sử dụng các biến như buttonWidth, buttonHeight, thinBorder, và thickBorder. Sau đó, nó sử dụng vị trí và kích thước tính được để tạo ra một hình chữ nhật SDL_Rect để lưu trữ vị trí và kích thước của phần đồng hồ và gán nó vào đối tượng Button của lớp Timer.
+
+Tiếp theo, đoạn mã tính toán kích thước của mỗi ô chứa số trong bảng Sudoku bằng cách sử dụng biến buttonWidth, buttonHeight, thinBorder, và thickBorder, và sau đó sử dụng chúng để tính toán vị trí và kích thước của từng ô chứa số bằng cách sử dụng vòng lặp for. Đối tượng Button của mỗi ô được cập nhật với vị trí và kích thước tính toán được.
+
+Cuối cùng, đoạn mã tính toán kích thước và vị trí của hai nút khác, "Kiểm tra" và "Mới", sử dụng các biến buttonWidth, buttonHeight, thinBorder, và thickBorder. Nó sử dụng vị trí và kích thước tính toán được để tạo ra hai hình chữ nhật SDL_Rect tương ứng với các nút, và gán chúng vào các đối tượng Button của mCheckButton và mNewButton.
+
+Trong quá trình tính toán, đoạn mã này sử dụng các giá trị đã tính toán trước đó để tính toán các giá trị mới, điều này đảm bảo rằng các vị trí và kích thước được tính toán một cách chính xác và phù hợp với kích thước của cửa sổ chơi game. 
+
+
+**void Sudoku::Sudoku::generateSudoku()
+--> tạo ra một trò chơi Sudoku mới bằng cách tạo một lưới trống 81 ô và sau đó sử dụng đối tượng Generator để tạo ra một solution cho trò chơi này.
+
+Cụ thể, các bước trong quá trình tạo trò chơi Sudoku mới là như sau:
+
+Tạo một lưới trống 81 ô để chứa các con số của game bằng cách khởi tạo mảng generatedGrid với tất cả các phần tử bằng 0.
+
+Tạo một lưới trống 81 ô để chứa các solution của game bằng cách khởi tạo mảng solution với tất cả các phần tử bằng 0.
+
+Sử dụng đối tượng Generator để tạo ra một solution cho trò chơi Sudoku bằng cách gọi phương thức generate với tham số là lưới trống generatedGrid và lưới trống solution. Kết quả của phương thức này sẽ được lưu trữ trong mảng solution.
+
+Đi qua từng ô trong lưới 81 ô và thực hiện các hành động sau đây:
+
+Set số và solution cho từng ô bằng cách sử dụng giá trị tương ứng trong mảng generatedGrid và solution.
+Set khả năng chỉnh sửa của từng ô dựa trên giá trị của nó trong generatedGrid. Nếu giá trị là 0, ô đó được đánh dấu là có khả năng chỉnh sửa, nếu không thì được đánh dấu là không thể chỉnh sửa.
+Thiết lập texture cho từng ô bằng cách sử dụng giá trị tương ứng trong mảng mTextureCache. Nếu ô không có giá trị (là ô trống), texture được set là NULL.
+Căn giữa texture trên button bằng cách gọi phương thức centerTextureRect của đối tượng ô mGrid[i].
+Với các bước trên, đoạn code trên sẽ tạo ra một trò chơi Sudoku mới với lưới trống và solution được tạo ngẫu nhiên và các ô có số được thiết lập và có khả năng chỉnh sửa theo quy tắc của trò chơi Sudoku.
+
+
+**void Sudoku::Sudoku::freeTextures()
+--> Sử dụng để giải phóng các texture đã được tải vào trong mảng mTextureCache. Mỗi texture tương ứng với một số từ 1 đến 9, hoặc 0 nếu ô đó không có số.
+
+Trong phương thức này, vòng lặp for duyệt qua tất cả các texture đã được tải vào trong mảng mTextureCache. Nếu texture tại vị trí đó không null (tức là đã được tải vào bộ nhớ), thì phương thức SDL_DestroyTexture() sẽ được gọi để giải phóng bộ nhớ của texture đó. Sau đó, giá trị của mảng tại vị trí đó sẽ được gán lại bằng null.
+
+Quá trình giải phóng các texture này giúp giải phóng bộ nhớ và giảm thiểu tình trạng lãng phí bộ nhớ trong chương trình.
+
+
+**void Sudoku::Sudoku::play()
+Hàm initialiseSDL() được gọi để khởi tạo SDL (Simple DirectMedia Layer), một thư viện đa phương tiện được sử dụng để tạo ra trò chơi.
+
+Hàm preloadTextures() được gọi để tải trước các texture cần thiết cho lưới sudoku và các nút. Việc tải trước texture giúp tránh tình trạng giật lag trong quá trình chơi.
+
+Hàm createInterfaceLayout() được gọi để tạo giao diện người dùng cho game. Giao diện này sẽ hiển thị lưới Sudoku và các nút để người chơi tương tác với trò chơi.
+
+Hàm generateSudoku() được gọi để tạo ra một trò chơi Sudoku mới và thiết lập số và solution cho từng ô và cũng tạo thêm khả năng chỉnh sửa cho mỗi ô. Trong hàm này, các ô trong lưới sẽ được gán các giá trị số và solution, và các ô trống sẽ được đánh dấu là có thể chỉnh sửa.
+
+Một ô đầu tiên sẽ được chọn bằng cách tìm ô đầu tiên có thể chỉnh sửa và đặt ô đó là ô được chọn. Việc chọn ô đầu tiên giúp cho người chơi có thể bắt đầu chơi ngay mà không cần phải chọn ô trước đó.
+
+Cuối cùng, SDL sẽ được thiết lập để cho phép người chơi nhập văn bản, bằng cách gọi hàm SDL_StartTextInput().
+
+Biến stop được sử dụng để kiểm tra xem trò chơi có đang chạy hay không. Ban đầu, giá trị của stop được thiết lập là false, có nghĩa là trò chơi đang chạy.
+
+Biến completed được sử dụng để kiểm tra xem trò chơi đã được hoàn thành chưa. Giá trị của completed được thiết lập là false ban đầu.
+Biến generateNewSudoku được sử dụng để kiểm tra xem người dùng đã yêu cầu tạo một trò chơi Sudoku mới hay chưa. Giá trị của generateNewSudoku được thiết lập là false ban đầu.
+
+Biến checkSolution được sử dụng để kiểm tra xem người dùng đã yêu cầu kiểm tra solution của trò chơi Sudoku hay chưa. Giá trị của checkSolution được thiết lập là false ban đầu.
+
+Biến measureTimeForCheckButton được sử dụng để đo thời gian người dùng sử dụng tính năng kiểm tra solution của trò chơi Sudoku. Giá trị của measureTimeForCheckButton được thiết lập là false ban đầu.
+
+Biến startTimeForCheckButton được sử dụng để lưu thời điểm bắt đầu đo thời gian sử dụng tính năng kiểm tra solution của trò chơi Sudoku.
+
+Biến startTimer được sử dụng để lưu thời điểm bắt đầu của trò chơi Sudoku.
+
+khi mà game chưa dừng while(!stop) thì game sẽ xử lý các event mà người chơi nhập vào thông qua SDL_PollEvent. Đầu tiên nó sẽ kiểm tra nếu mà người chơi bấm nút thoát thì stop sẽ được set thành true và dừng trò chơi, nếu không thì nó sẽ kiểm tra nếu người chơi bấm nút kiểm tra, sau đó hàm checkSolution sẽ được set thành true. Nó còn kiểm tra khi người chơi bấm nút "Moi" thì hàm generateNewSudoku sẽ được set thành true. Tiếp theo code sẽ kiểm tra từng cell của các cell trong trò chơi và nếu cell đó có thể chỉnh sửa thì sẽ kiểm tra người dùng nhấp vào ô đó hay chưa, do vậy code đặt thêm con trỏ currentCellSelected tới ô vừa được chọn và đặt cờ của ô đã được chọn trước đó thành false. Và sau đó code thêm handleKeyboardEvent để sử lý các event mà người chơi nhập từ bàn phím vào
+
+Khi mà người chơi click vào "Moi" thì gàm generateSudoku sẽ được chạy và tạo ra 1 game mới và các cell trước đó set thành false, và chạy vòng for của tất cả các ô trong đó và nếu ô nào có thể chỉnh sửa thì đặt setSelected thành true. Sau đó code reset lại các flag của generateNewSudoku và completed thành hết false và reset lại bộ đếm thời gian
+
+Khi mà người chơi click vào nút "Kiem Tra" thì code sẽ check các solution của từng ô và nếu mà không đúng thì cờ của completed sẽ được set thành false, ngược lại là true. Bộ đếm thời gian vẫn hoạt động. Sau đó khi bấm xong "Kiem Tra" thì flag của checkSolution sẽ được đặt lại là false 
+
+****************
+Tiếp theo thì code sẽ tạo bộ đếm thời gian cho nút "Kiem Tra", khởi tạo thời gian cho kiểm tra là 2 giây. Nếu mà người chơi bấm vào nút "Kiem Tra" sẽ có 2 kiểu. 1 là completed được set thành true thì game sẽ render ra màu của game thành hết màu xanh lá cây và setTexture cho game thành "Dung". còn thứ 2 là completed được set thành false(tức là người chơi bấm kiểm tra nhưng mà bị sai) thì game sẽ render ra màu đỏ vào đổi texture thành "Sai". Còn lại game sẽ reset lại flag của bộ đếm thời gian cho nút "Kiem tra". Nếu mà người chơi không bấm vào nút "kiểm tra" thì game sẽ tạo texture cho nút "Kiem Tra" và render màu của nút đó thành màu đen
+
+****************
+
+*****************
+hàm SDL_RenderClear(mRenderer) dùng để xoá toàn nội dung của bộ đệm hiện tại trong hàm Renderer với các màu được thiết lập trước đó bằng hàm SDL_SetRenderDrawColor
+*****************
+
+****************
+Sau đó, một vòng lặp được sử dụng để duyệt qua từng ô của Sudoku. Trong vòng lặp, đối tượng ô được gọi để vẽ lại nút (button) tương ứng với ô đó bằng cách gọi phương thức renderButton và sau đó vẽ lại texture (nếu có) lên ô đó bằng phương thức renderTexture. Phương thức centerTextureRect được gọi để căn giữa texture của ô. Việc này đảm bảo rằng các số trong các ô có kích thước khác nhau sẽ được căn giữa trên nền ô.
+****************
+
+*************
+code render button, căn giữa và render texture của nút "Kiem Tra" và "Moi" cho game
+*************
+
+*************
+Tiếp theo tạo bộ đếm thời gian cho game kể từ lúc bắt đầu chơi bằng cách lấy thời gian hiện tại trừ đi thời gian lúc bắt đầu. Sau đó, chương trình định dạng thời gian dưới dạng giờ, phút, giây và lưu vào biến timer dưới định dạng chuỗi ký tự. Để định dạng thời gian, chương trình sử dụng hàm gmtime với tham số đầu vào là độ chênh lệch thời gian tính từ thời điểm bắt đầu đếm. Sau đó, hàm strftime sẽ định dạng thời gian dưới dạng chuỗi ký tự theo định dạng "%H:%M:%S" (giờ:phút:giây). Sau khi có được chuỗi ký tự thời gian đã định dạng, chương trình tạo một texture từ chuỗi ký tự này bằng hàm loadTexture và gán texture này vào button mTimer. Sau đó, button được vẽ ra màn hình và canh giữa texture của button để hiển thị thời gian đẹp hơn. Cuối cùng, texture được xoá bằng hàm SDL_DestroyTexture để tránh rò rỉ bộ nhớ.
+**************
+
+Sau khi cập nhật lại màn hình với nội dung mới nhất bằng hàm SDL_RenderPresent, chương trình sẽ delay trong 10ms để làm trò chơi chạy chậm hơn.
+
+Sau khi game dừng thì SDL_StopTextInput() được gọi để vô hiệu hoá chế độ nhập text của người chơi, nghĩa là người chơi không thể nhập bất kỳ ký tự nào nữa sau khi trò chơi kết thúc. freeTextures() được gọi để giải phóng các texture được tải trong chương trình, tránh lãng phí tài nguyên. close() được gọi để đóng các cửa sổ và renderer và kết thúc chương trình.
+
+
+**void Sudoku::Sudoku::close()
+Khi mà người chơi thoát game thì ta sẽ dùng hàm SDL_DestroyRenderer(mRenderer), SDL_DestroyWindow(mWindow) và trỏ mRenderer và mWindow về nullptr, chúng ta cũng sẽ giải phòng font TFF_CloseFont(mFont) và trỏ mFont về nullptr. Cuối cùng sẽ là SDL_Quit và TFF_Quit
+

@@ -1,0 +1,47 @@
+*Sudoku::Cell::Cell() 
+->tạo ô trong game sudoku
+dòng 4 mEditable để khai báo có thể chỉnh sửa trong 1 ô của lưới
+mCharNumber và mCharSolution: hai thuộc tính kiểu ký tự, lần lượt biểu thị số gợi ý và số giải đáp của ô.
+
+
+*void Sudoku::Cell::setNumber(const int number)
+-> Thiết lập số của ô số trong lưới sudoku
+Tham số number là giá trị số của ô Sudoku. Nếu tham số này là 0 thì ô Sudoku sẽ được thiết lập thành rỗng, ngược lại nếu number là 1 đến 9 thì ô Sudoku sẽ được thiết lập giá trị số tương ứng.
+Nếu number bằng 0 thì biến mCharNumber được thiết lập thành khoảng trắng, ngược lại nếu number khác 0 thì mCharNumber sẽ được thiết lập thành ký tự số tương ứng bằng cách cộng số đó với ký tự '0'.
+
+
+*char Sudoku::Cell::getNumber() const
+hàm trả về giá trị của biến mCharNumber được lưu trữ trong đối tượng Cell.
+
+
+*void Sudoku::Cell::setSolution(const int solution)
+-> set giải pháp trong 1 ô của trò chơi
+Nếu giá trị giải pháp của ô là 0, thì ô đó được coi là chưa có giá trị được điền vào, và ký tự của ô được thiết lập là khoảng trắng. Nếu giá trị giải pháp khác 0, thì ô đó đã có giá trị được điền vào và ký tự của ô được thiết lập là '0' cộng với giá trị giải pháp của ô đó.
+note: giá trị giải pháp của ô Sudoku chỉ được sử dụng để so sánh với giá trị người dùng nhập vào, nó không được hiển thị trực tiếp trên bảng Sudoku.
+
+
+*void Sudoku::Cell::setEditable(const bool editable)
+->chỉnh sửa màu cho từng ô khi chuột trỏ tới
+nếu mà ô đó có thể chỉnh chửa thì khi chuột rời khỏi ô thì màu của ô sẽ là màu trắng (mMouseOutColour), khi di chuyển chuột qua ô khác thì màu ô đang trỏ tới(nhưng chưa bấm xuống) sẽ là màu xanh (mMouseOverMotionColour), khi nhấn chuột xuống vào ô thì màu của ô sẽ là màu xanh lá cây (mMouseDownColour), và khi nhấc chuột lên khỏi ô thì màu của ô sẽ trở lại là màu xanh (mMouseUpColour).
+Nếu mEditable là false, thì màu của ô trong tất cả các trường hợp sẽ được thiết lập thành màu tím nhạt (mMouseOutColour, mMouseOverMotionColour, mMouseDownColour, và mMouseUpColour đều giống nhau).
+
+
+*bool Sudoku::Cell::isEditable() const
+Giá trị trả về được xác định bởi biến mEditable trong lớp Cell. Nếu mEditable có giá trị true thì ô số có thể chỉnh sửa, ngược lại thì không thể.
+
+
+*void Sudoku::Cell::handleKeyboardEvent(const SDL_Event* event, SDL_Texture* textureCache[])
+->sử lý event khi bấm bàn phím của từng ô
+Nếu người dùng nhấn nút backspace và ô đang chứa số, phương thức sẽ xóa số đó và đặt texture của ô về trống.
+Nếu người dùng nhập văn bản, phương thức sẽ kiểm tra xem văn bản đó có phải là số nguyên dương hay không. Nếu có, phương thức sẽ thay thế số trong ô bằng số đó và đặt texture của ô dựa trên số nhập vào.
+Chú thích:
+SDL_Event* event: con trỏ tới sự kiện SDL đang được xử lý.
+SDL_Texture* textureCache[]: một mảng chứa các texture được cache trước đó. Texture ở vị trí thứ i của mảng là texture đại diện cho số i trên bàn sudoku.
+SDLK_BACKSPACE: hằng số đại diện cho phím backspace trên bàn phím.
+SDL_TEXTINPUT: hằng số đại diện cho sự kiện đầu vào văn bản trên SDL.
+
+
+*bool Sudoku::Cell::isCorrect() const
+->nếu mà người chơi nhập đúng số trong ô đang được chỉnh sửa
+trả về số nhập sẽ bằng số của giải pháp
+
