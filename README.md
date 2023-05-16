@@ -2,6 +2,8 @@
 ở phần new terminal trong vscode, chạy lệnh minGW32-make để build file exe.
 sau đó chạy lệnh ./game để run file exe đó
 
+font chữ dùng ở đây là DIGITAL SANS EF
+
 hoặc ra thư mục chứa code để chạy file game.exe
 
 tạo được đồng hồ đếm thời gian khi người chơi chơi game
