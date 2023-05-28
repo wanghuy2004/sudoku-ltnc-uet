@@ -10,6 +10,7 @@ hoặc ra thư mục chứa code để chạy file game.exe
 font chữ dùng ở đây là DIGITAL SANS EF
 
 --------------------------------------BÁO CÁO--------------------------------------
+
 tạo được đồng hồ đếm thời gian khi người chơi chơi game
 
 		// Tính thời gian từ thời điểm bắt đầu đếm của trò chơi
