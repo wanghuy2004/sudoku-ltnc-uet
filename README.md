@@ -33,5 +33,5 @@ tạo được đồng hồ đếm thời gian khi người chơi chơi game
     
 
 UPDATE:
-sửa lỗi đồng hồ bị lỗi khi bắt đầu game thì đếm từ 07:00:00
+sửa lỗi đồng hồ bị lỗi khi bắt đầu game thì đếm từ 07:00:00 ở ver1
 
