@@ -1,8 +1,6 @@
-# test-ltnc
+# installation
 
-cách chạy trò chơi
-
-# clone the repo
+$ clone the repo
 $ click game.exe để chơi
 
 ở phần new terminal trong vscode, chạy lệnh minGW32-make để build file exe.
@@ -12,7 +10,7 @@ hoặc ra thư mục chứa code để chạy file game.exe
 
 font chữ dùng ở đây là DIGITAL SANS EF
 
---------------------------------------BÁO CÁO--------------------------------------
+# Báo cáo
 
 tạo được đồng hồ đếm thời gian khi người chơi chơi game
 
