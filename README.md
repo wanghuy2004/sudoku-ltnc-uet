@@ -1,6 +1,7 @@
 # installation
 
 $ clone the repo
+
 $ click game.exe để chơi
 
 ở phần new terminal trong vscode, chạy lệnh minGW32-make để build file exe.
