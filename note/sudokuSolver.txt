@@ -1,0 +1,15 @@
+Hàm khởi tạo Solver(): Đây là hàm khởi tạo của lớp Solver. Nó khởi tạo các biến thành viên như mGrid (mảng lưu trữ grid Sudoku), mGenModifier (điều chỉnh để sử dụng trong quá trình sinh Sudoku), và mNumToIgnore (các chỉ số hàng, cột và số cần bỏ qua trong quá trình sinh Sudoku).
+
+Hàm setElement(): Đây là một hàm trợ giúp để đặt giá trị của một ô Sudoku trong mảng mGrid.
+
+Hàm getElement(): Đây là một hàm trợ giúp để lấy giá trị của một ô Sudoku từ mảng mGrid.
+
+Hàm checkValid(): Hàm này kiểm tra xem một số đã được đặt trong ô Sudoku có hợp lệ không, tức là số đó không xuất hiện trong hàng, cột và khối 3x3 tương ứng với ô đó. Nếu số là hợp lệ, hàm trả về true, ngược lại trả về false.
+
+Hàm setGenModifier(): Hàm này được sử dụng để thiết lập giá trị của biến mGenModifier. Biến này được sử dụng trong quá trình sinh Sudoku để bỏ qua một số cụ thể được chỉ định.
+
+Hàm setGrid(): Hàm này được sử dụng để thiết lập lưới Sudoku mà Solver sẽ giải quyết. Nó lưu trữ mảng Sudoku và các chỉ số hàng, cột và số cần bỏ qua.
+
+Hàm solve(): Đây là hàm chính để giải Sudoku. Nó sử dụng thuật toán backtracking để thử tất cả các số từ 1 đến 9 cho mỗi ô trống trong lưới. Nếu số đó hợp lệ, nó sẽ gọi đệ quy để tiếp tục giải quyết các ô còn lại. Nếu giải quyết thành công, hàm trả về true, ngược lại trả về false.
+
+Hàm display(): Hàm này được sử dụng để hiển thị lưới Sudoku sau khi được giải quyết. Nó đơn giản là in ra các giá trị của mảng mGrid theo định dạng hàng và cột.
